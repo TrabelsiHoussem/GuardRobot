@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/config.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="js/myrobot.js"></script>
+    <link rel="stylesheet" href="css/myrobot.css">
+</head>
+
+<body>
+    <div id="barre">
+        <center>
+            <div class=titre>
+                <h2>ROBOT</h2>
+            </div>
+    </div>
+    <div id="monImage">
+        <img id="streaminglive" width="100%" height="200px" src="http://192.168.1.7:8081/" alt="streaming">
+    </div>
+    <div id="commande">
+        <center>
+            <table>
+                <tr>
+                    <th></th>
+                    <th><button class="avance" id="avance" onclick="javascript:move('forward');"><i class="fa fa-arrow-circle-up" id="avancee" style="font-size: 60px; color:#22b1bd"> </i> </button></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th><button class="gauche" id="gauche" onclick="javascript:move('left');"><i class="fa fa-arrow-circle-left" id="gauchee" style="font-size: 60px; color: #22b1bd "> </i> </button></th>
+                    <th><button class="stop" id="stop" onclick="javascript:move('stop');"><i class="fa fa-stop-circle" id="stopp" style="font-size: 60px; color:  #a0b640fa "> </i> </button></th>
+                    <th><button class="droite" id="droite" onclick="javascript:move('right');"><i class="fa fa-arrow-circle-right" id="droitee" style="font-size: 60px; color: #22b1bd"> </i> </button></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th><button class="recule" id="recule" onclick="javascript:move('backward');"><i class="fa fa-arrow-circle-down" id="reculee" style="font-size: 60px; color:  #22b1bd"> </i> </button></th>
+                    <th></th>
+                </tr>
+            </table>
+        </center>
+        <script>
+            document.getElementById("streaminglive").src = streaming
+        </script>
+        <script>
+            jQuery(document).ready(function() {
+                function load() {
+                    jQuery.get(ipadress + "/be", function(result) {
+                        jQuery("#text11").text(result);
+                        if (parseInt(result) == 0) {
+                            jQuery("#monImage1").attr("src", "img/green.png");
+                        } else {
+                            jQuery("#monImage1").attr("src", "img/red.png");
+                        }
+                        setTimeout(load, 2000);
+                    });
+                }
+                load();
+            });
+        </script>
+
+</body>
+
+</html>

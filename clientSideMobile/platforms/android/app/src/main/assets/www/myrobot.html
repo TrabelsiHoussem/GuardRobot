@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="js/myrobot.js"></script>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            font-family: "Bree Serif", sans-serif;
+        }
+        
+        body {
+            background-repeat: no-repeat;
+            background-size: 100%;
+            overflow: hidden;
+        }
+        
+        #barre {
+            width: auto;
+            height: 60px;
+            background-color: #22b1bd;
+        }
+        
+        .titre {
+            position: absolute;
+            top: 16px;
+            left: 100px;
+            right: 100px;
+            color: white;
+            text-align: center;
+        }
+        
+        p2 {
+            color: black;
+            text-align: center;
+        }
+        
+        #monImage {
+            top: 100px;
+            margin-top: 2px;
+            padding-top: 2px;
+            padding-left: 50px;
+            padding-right: 50px;
+            left: 50px;
+            right: 50px;
+        }
+        
+        #modeauto {
+            top: 700px;
+            margin-top: 0px;
+            padding-top: 0px;
+        }
+        
+        #commande {
+            top: 900px;
+            margin-top: 20px;
+            padding-top: 10px;
+            left: 50px;
+            right: 50px;
+        }
+        
+        #commande button.avance {
+            border-radius: 50%;
+            padding: 0px 0px;
+            margin: 0px;
+            border: none;
+            cursor: pointer;
+            font-size: 48px;
+            width: 100px;
+            background-color: transparent;
+        }
+        
+        #commande button.recule {
+            border-radius: 50%;
+            padding: 0px 0px;
+            margin: 0px;
+            border: none;
+            cursor: pointer;
+            width: 100px;
+            background-color: transparent;
+        }
+        
+        #commande button.droite {
+            border-radius: 50%;
+            padding: 0px 0px;
+            margin: 0px;
+            border: none;
+            cursor: pointer;
+            width: 100px;
+            margin-right: 2%;
+            background-color: transparent;
+        }
+        
+        #commande button.gauche {
+            border-radius: 50%;
+            padding: 0px 0px;
+            margin: 0px;
+            border: none;
+            cursor: pointer;
+            width: 100px;
+            margin-left: 2%;
+            background-color: transparent;
+        }
+        
+        #commande button.stop {
+            border-radius: 50%;
+            padding: 15px 15px;
+            margin-left: 5px;
+            margin-right: 5px;
+            border: none;
+            cursor: pointer;
+            width: 100px;
+            background-color: transparent;
+        }
+        
+        #sidebar {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100px;
+            height: auto;
+            background-color: #fffff0;
+            text-align: center;
+            transform-origin: left;
+            transform: perspective(1200px) rotateY(90deg);
+            transition: all 400ms ease;
+        }
+        
+        #sidebar ul li a {
+            color: black;
+            font-size: 15px;
+            width: 100%;
+            height: 50px;
+            border-bottom: 1px solid #e6e6e6;
+            line-height: 50px;
+            display: block;
+            text-decoration: none;
+        }
+        
+        #sidebar.active {
+            transform: perspective(1200px) rotateY(0deg);
+        }
+        
+        #toggle-btn.active {
+            left: 95px;
+            transform: rotate(360deg);
+            top: 13px
+        }
+        
+        #toggle-btn {
+            position: absolute;
+            left: 30px;
+            top: 10px;
+            transition: left 200ms linear 0ms, transform 300ms ease 100ms;
+        }
+        
+        #toggle-btn span {
+            position: relative;
+            top: 4px;
+            display: block;
+            background: white;
+            width: 30px;
+            height: 4px;
+            margin: 5px 0px;
+            cursor: pointer;
+            transition: transform 300ms ease 200ms;
+        }
+        
+        #toggle-btn.active span:nth-child(1) {
+            top: 10px;
+            transform: rotate(45deg);
+        }
+        
+        #toggle-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        #toggle-btn.active span:nth-child(3) {
+            top: -10px;
+            transform: rotate(-45deg);
+        }
+        
+        .switch {
+            opacity: 0;
+        }
+        
+        .switch>div {
+            width: 60px;
+            height: 20px;
+            background: #9A9A9A;
+            z-index: 0;
+            cursor: pointer;
+            position: relative;
+            border-radius: 50px;
+            line-height: 40px;
+            text-align: right;
+            padding: 0 10px;
+            color: rgba(0, 0, 0, .5);
+            transition: all 250ms;
+            box-shadow: inset 0 3px 15px -3px
+        }
+        
+        .switch>input:checked+div {
+            background: #8f4345;
+            text-align: left;
+            color: rgba(255, 255, 255, .75);
+        }
+        
+        .switch>div:before {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            left: 0;
+            top: -2px;
+            height: 22px;
+            width: 22px;
+            background: linear-gradient(#f9f9f9 30%, #CDCDCD);
+            border-radius: 50%;
+            transition: all 200ms;
+            box-shadow: 0 15px 15px -3px rgba(0, 0, 0, .25), inset 0 -2px 2px -3px, 0 3px 0 0px #f9f9f9;
+        }
+        
+        .switch>input:checked+div:before {
+            content: '';
+            position: absolute;
+            left: 40px;
+            border-radius: 50%;
+        }
+        
+        .btn-mode {
+            margin-top: 30px;
+            padding: 15px 15px;
+            border: none;
+            background-color: #cccccc;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 50%;
+        }
+        
+        .robot {
+            margin: auto;
+            height: 56px;
+            width: 55px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="barre">
+        <center>
+            <div class=titre>
+                <h2>Rovio</h2>
+            </div>
+    </div>
+    <div id="monImage">
+        <!--  <video width="100%" height="200px" autoplay><source src="img/videoplayback.mp4" type="video/mp4"></video>-->
+        <img width="100%" height="200px" src="http://192.168.1.7:8081/" alt="streaming">
+    </div>
+
+
+
+    <div id="sidebar">
+        <ul>
+
+            <li style="background:#22b1bd"><img class="robot" src="img/logo.jpg" /></li>
+            <li><a href="state.html">ON/OFF</a></li>
+            <li><a href="video.html">Recording</a> </li>
+            <li><a href="alert.html">Alert</a> </li>
+            <li><a href="#Exit">Exit</a></li>
+        </ul>
+    </div>
+
+
+
+    <div id="toggle-btn" onclick="toggleSidebar(this)">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+
+
+    <div id="commande">
+
+        <table style="width:100%">
+
+            <tr>
+
+                <th><img id="monImage1" src="" alt="" width="2%" height="10%"></th>
+                <th><button type "button" class="avance" id="avance" onclick="javascript:move('avant');"><i class="fa fa-arrow-circle-up" id="avancee" style="font-size: 60px; color:#22b1bd"> </i> </button></th>
+                <th></th>
+            </tr>
+
+
+            <tr>
+                <th><button type "button" class="gauche" id="gauche" onclick="javascript:move('gauche');"><i class="fa fa-arrow-circle-left" id="gauchee" style="font-size: 60px; color: #22b1bd "> </i> </button></th>
+                <th><button type "button" class="stop" id="stop" onclick="javascript:move('stop');"><i class="fa fa-stop-circle" id="stopp" style="font-size: 60px; color:  #a0b640fa "> </i> </button></th>
+                <th><button type "button" class="droite" id="droite" onclick="javascript:move('droite');"><i class="fa fa-arrow-circle-right" id="droitee" style="font-size: 60px; color: #22b1bd"> </i> </button></th>
+            </tr>
+
+
+            <tr>
+                <th></th>
+                <th><button type "button" class="recule" id="recule" onkeypress="myFunction(event)" onclick="javascript:move('arriere');"><i class="fa fa-arrow-circle-down" id="reculee" style="font-size: 60px; color:  #22b1bd"> </i> </button></th>
+                <th></th>
+            </tr>
+
+        </table>
+
+
+        <div id="modeauto">
+            <center><button type="button" class="btn-mode" id="mode" onclick="javascript:desactivee();"><p2>Mode manuelle</p2></button></center>
+        </div>
+
+        <script>
+            jQuery(document).ready(function() {
+                function load() {
+
+                    jQuery.get("http://192.168.1.7:8089/be", function(result) {
+
+                        jQuery("#text11").text(result);
+
+
+
+
+
+                        if (parseInt(result) == 0) {
+
+                            jQuery("#monImage1").attr("src", "img/green.png");
+
+                        } else {
+                            //alert(1)
+                            jQuery("#monImage1").attr("src", "img/red.png");
+
+                        }
+
+                        setTimeout(load, 2000);
+
+
+
+
+
+                    });
+
+                }
+
+                load();
+            });
+            /*
+                                                function disbaleEnable() {
+                                                    if (document.getElementById("recule").disabled) {
+                                                      
+
+                                                        document.getElementById("recule").disabled = false;
+                                                        document.getElementById("gauche").disabled = false;
+                                                        document.getElementById("avance").disabled = false;
+                                                        document.getElementById("stop").disabled = false;
+                                                        document.getElementById("droite").disabled = false;
+
+
+                                                    } else {
+                                                        document.getElementById("myBtn").disabled = true;
+                                                        document.getElementById("recule").disabled = true;
+                                                        document.getElementById("gauche").disabled = true;
+                                                        document.getElementById("avance").disabled = true;
+                                                        document.getElementById("stop").disabled = true;
+                                                        document.getElementById("droite").disabled = true;
+
+                                                       
+                                                    }
+
+                                                } */
+
+
+
+
+            /*  function myFunction(event) {
+
+
+                  switch (event.keyCode) {
+                      case 122: // ←
+                          move('avant');
+
+                          break;
+                      case 100: // ↑
+                          move('droite');
+
+                      case 113: // →
+                          move('gauche');
+
+                      case 115: // ↓
+                          move('arriere')
+
+                          event.preventDefault();
+                          return false;
+                  }
+              }
+
+              function move(direction) {
+                  if (direction == 'undefined')  { 
+                      return; 
+                  }
+                  //requete Http pour le serveur
+                  var xmlhttp = new XMLHttpRequest(); 
+                  xmlhttp.open("POST", "/", true);
+                  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                  xmlhttp.send("direction=" + direction);
+              }
+
+
+
+
+
+
+
+
+              function desactivee() {
+                  var x = document.getElementById("avance");
+                  var y = document.getElementById("mode")
+                  if (x.disabled === false) {
+                      x.disabled = true;
+                      document.getElementById("avancee").style.opacity = 0.6;
+                      y.innerHTML = "Mode automatique";
+                  } else {
+                      x.disabled = false;
+                      document.getElementById("avancee").style.opacity = 1;
+                      y.innerHTML = "Mode manuelle";
+                  }
+                  var x = document.getElementById("gauche");
+                  if (x.disabled === false) {
+                      x.disabled = true;
+                      document.getElementById("gauchee").style.opacity = 0.6;
+                      y.innerHTML = "Mode automatique";
+                  } else {
+                      x.disabled = false;
+                      document.getElementById("gauchee").style.opacity = 1;
+                      y.innerHTML = "Mode manuelle";
+                  }
+
+                  var x = document.getElementById("stop");
+                  if (x.disabled === false) {
+                      x.disabled = true;
+                      document.getElementById("stopp").style.opacity = 0.6;
+                      y.innerHTML = "Mode automatique";
+                  } else {
+                      x.disabled = false;
+                      document.getElementById("stopp").style.opacity = 1;
+                      y.innerHTML = "Mode manuelle";
+                  }
+                  var x = document.getElementById("droite");
+                  if (x.disabled === false) {
+                      x.disabled = true;
+                      document.getElementById("droitee").style.opacity = 0.6;
+                      y.innerHTML = "Mode automatique";
+                  } else {
+                      x.disabled = false;
+                      document.getElementById("droitee").style.opacity = 1;
+                      y.innerHTML = "Mode manuelle";
+                  }
+                  var x = document.getElementById("recule");
+                  if (x.disabled === false) {
+                      x.disabled = true;
+                      document.getElementById("reculee").style.opacity = 0.6;
+                      y.innerHTML = "Mode automatique";
+                  } else {
+                      x.disabled = false;
+                      document.getElementById("reculee").style.opacity = 1;
+                      y.innerHTML = "Mode manuelle";
+                  }
+
+
+              } */
+        </script>
+
+</body>
+
+</html>
